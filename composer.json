@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "SSF\\Container\\": "src"
+    }
+  },
+  "require": {
+    "psr/container": "^2.0"
+  }
+}
