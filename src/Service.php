@@ -55,7 +55,7 @@ class Service
         }
 
         if ($this->isResolvable($definition)) {
-            return (new DependencyResolver($this->container, $this->name))->newConcrete($definition);
+            return (new DependencyResolver($this->container))->newConcrete($this->name, $definition);
         }
 
         return $definition;

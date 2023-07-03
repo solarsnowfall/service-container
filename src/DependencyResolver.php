@@ -16,22 +16,24 @@ class DependencyResolver
 
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly string|array $abstract
+        private readonly array|string $abstract
     ) {
+        if (!is_string($this->abstract) && !is_callable($this->abstract)) {
+            throw new InvalidArgumentException("Abstract must be class, function or method name");
+        }
         $this->reflector = $this->getReflector();
     }
 
     public function newConcrete(array $arguments = [])
     {
+        $abstract = $this->abstract;
         $dependencies = $this->getDependencies($arguments);
 
         if ($this->reflector instanceof ReflectionMethod) {
             if ($this->reflector->isConstructor()) {
                 return $this->reflector->getDeclaringClass()->newInstance(...$dependencies);
             } else {
-                $arg = is_array($this->abstract) && is_object($this->abstract[0])
-                    ? $this->abstract[0] :
-                    null;
+                $arg = is_array($abstract) && is_object($abstract[0]) ? $this->abstract[0] : null;
                 array_unshift($dependencies, $arg);
             }
         }
